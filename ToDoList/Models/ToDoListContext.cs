@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // Needed for IdentityDbContext<ApplicationUser>
 using Microsoft.EntityFrameworkCore;
 
 namespace ToDoList.Models
 {
-  public class ToDoListContext : DbContext
+  // Extend with DBContext for database only and IdentityDbContext<ApplicationUser> for database and identity verification
+  public class ToDoListContext : IdentityDbContext<ApplicationUser>
   {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Item> Items { get; set; }

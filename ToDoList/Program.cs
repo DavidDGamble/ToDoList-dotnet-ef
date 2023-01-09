@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;  // Used for identity verification
 using ToDoList.Models;
 
 namespace ToDoList
@@ -22,6 +23,30 @@ namespace ToDoList
                         )
                       );
 
+      // vvvvv---lines below used for identity verification---vvvvv 
+      builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ToDoListContext>()
+                .AddDefaultTokenProviders();
+
+      builder.Services.Configure<IdentityOptions>(options =>
+      {
+        // vvvvv---Default Password settings used with regex in RegisterViewModel---vvvvv
+        // options.Password.RequireDigit = true;
+        // options.Password.RequireLowercase = true;
+        // options.Password.RequireNonAlphanumeric = true;
+        // options.Password.RequireUppercase = true;
+        // options.Password.RequiredLength = 6;
+        // options.Password.RequiredUniqueChars = 1;
+
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 0;
+        options.Password.RequiredUniqueChars = 0;
+      });
+      // ^^^^^---lines above used for identity verification---^^^^^
+
       WebApplication app = builder.Build();
 
       // app.UseDeveloperExceptionPage();
@@ -29,6 +54,10 @@ namespace ToDoList
       app.UseStaticFiles();
 
       app.UseRouting();
+
+      // VVVVV--- 2 lines below used for identity verification 
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.MapControllerRoute(
           name: "default",
